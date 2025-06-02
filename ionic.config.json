@@ -1,0 +1,7 @@
+{
+  "name": "CocoaShop",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
