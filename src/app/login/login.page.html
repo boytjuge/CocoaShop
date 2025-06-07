@@ -17,7 +17,7 @@
       <ion-input [(ngModel)]="password" name="password" type="password" required></ion-input>
     </ion-item>
 
-    <ion-button expand="block" type="submit">Login</ion-button>
+    <ion-button expand="block" type="submit" [disabled]="loading">Login</ion-button>
   </form>
 
   <ion-item lines="full" class="ion-margin-top">

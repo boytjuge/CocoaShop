@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms'; 
+import { LoginService } from '../services/login.service';
+import { ToastController } from '@ionic/angular';
 import {  
   IonHeader,
   IonToolbar,
@@ -30,19 +32,44 @@ import {
     IonButton,
     IonIcon ,   // ✅ เพิ่มตรงนี้
     FormsModule
+    
   ]
 })
 export class LoginPage {
-  username = '';
-  password = '';
+  username:string = '';
+  password:string = '';
 
-  constructor(private router: Router) {}
+  constructor(
+  private router: Router,
+  private loginservice: LoginService,
+  private toastController: ToastController
+  ) {}
 
-  onLogin() {
-    // Call API or AuthService here
-    console.log('Login with', this.username, this.password);
-    this.router.navigate(['/tabs']);
-  }
+  loading = false;
+
+onLogin() {
+  this.loading = true;
+  this.loginservice.check_login({ email: this.username, password: this.password }).subscribe({
+    next: (res) => {
+      localStorage.setItem('access_token', res.access_token);
+      localStorage.setItem('refresh_token', res.refresh_token);
+    //  this.router.navigate(['/tab']);
+      this.router.navigate(['/tabs/tab1']);
+
+      this.loading = false;
+    },
+    error: async (err) => {
+      this.loading = false;
+      const toast = await this.toastController.create({
+        message: 'Login failed. กรุณาตรวจสอบข้อมูลอีกครั้ง',
+        duration: 3000,
+        color: 'danger'
+      });
+      toast.present();
+    }
+  });
+}
+
 
   loginWithGoogle() {
     console.log('Google login clicked');
